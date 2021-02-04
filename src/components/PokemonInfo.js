@@ -9,7 +9,9 @@ export default class PokemonInfo extends Component {
 	state = {
 		pokemonId: '',
 		types: [
-		]
+		],
+		height: '',
+		weight: ''
 	}
 	async componentDidMount(){
 		/* Récupération de l'Id */
@@ -18,7 +20,6 @@ export default class PokemonInfo extends Component {
 		/* API */
 		const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
 		const result = await axios.get(pokemonUrl)
-		console.log(result.data.types)
 
 		/* Stylisation du Nom */
 		this.state.name = result.data.name.charAt(0).toUpperCase() + result.data.name.substr(1);
@@ -26,6 +27,27 @@ export default class PokemonInfo extends Component {
 			if(this.state.name.charAt(i) === "-"){
 				this.state.name = this.state.name.substr(0, i) + " " + this.state.name.charAt(i+1).toUpperCase() + this.state.name.substr(i+2)
 			}
+		}
+
+		/* Stylisation de la Taille */
+		let height = result.data.height.toString()
+		if(height.length === 1){
+			this.state.height = "0."+ height + " m"
+		}
+		else{
+			let lastChar = height.charAt(height.length - 1)
+			this.state.height = height.slice(0, -1) + "." + lastChar + " m"
+		}
+		console.log(result.data)
+
+		/* Stylisation du Poids */
+		let weight = result.data.weight.toString()
+		if(weight.length === 1){
+			this.state.weight = "0."+ weight + " kg"
+		}
+		else{
+			let lastChar = weight.charAt(weight.length - 1)
+			this.state.weight = weight.slice(0, -1) + "." + lastChar + " kg"
 		}
 
 		/* Stylisation des Types */
@@ -104,13 +126,20 @@ export default class PokemonInfo extends Component {
 			}
 		}
 
-		/* Sprites */
+		/* Sprites et stats*/
 		this.setState({
 			image1 : result.data["sprites"]["other"]["official-artwork"]["front_default"],
 			image2 : result.data["sprites"]["front_default"],
 			image3 : result.data["sprites"]["back_default"],
 			image4 : result.data["sprites"]["front_shiny"],
 			image5 : result.data["sprites"]["back_shiny"],
+			statsPV : result.data["stats"][0]["base_stat"],
+			statsAttaque : result.data["stats"][1]["base_stat"],
+			statsDefense : result.data["stats"][2]["base_stat"],
+			statsAttaqueSpe : result.data["stats"][3]["base_stat"],
+			statsDefenseSpe : result.data["stats"][4]["base_stat"],
+			statsVitesse : result.data["stats"][5]["base_stat"]
+
 		})
 
 		/* Création div Types */
@@ -129,7 +158,7 @@ export default class PokemonInfo extends Component {
 	render() {
 		return (
 			<div className="pokedex">
-				<div className="slide-container" style={{width:"40vw", height:"40vw"}}>
+				<div className="slide-container" style={{width:"40vw", height:"auto"}}>
 					<Slide style={{duration: 3000,transitionDuration: 750}}>
 						<div className="each-slide">
 							<div>
@@ -157,12 +186,49 @@ export default class PokemonInfo extends Component {
 							</div>
 						</div>
 					</Slide>
+					<div className="stats">
+						<div className="statsDiv">
+							<label className="statsLabel">Point de Vie</label>
+							<progress className="statsProgress" id="statsPV" value={this.state.statsPV} max="320"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Attaque</label>
+							<progress className="statsProgress" id="statsAttaque" value={this.state.statsAttaque} max="190"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Défense</label>
+							<progress className="statsProgress" id="statsDefense" value={this.state.statsDefense}  max="250"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Attaque Spéciale</label>
+							<progress className="statsProgress" id="statsAttaqueSpe" value={this.state.statsAttaqueSpe}  max="194"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Défense Spéciale</label>
+							<progress className="statsProgress" id="statsDefenseSpe" value={this.state.statsDefenseSpe}  max="250"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Vitesse</label>
+							<progress className="statsProgress" id="statsVitesse" value={this.state.statsVitesse}  max="200"></progress>
+						</div>
+					</div>
       			</div>
 				<div className="rightPart">
 					<h1 className="pokemonName">{this.state.name}</h1>
 					<label className="label">Type</label>
 					<div className="types" id="type_list">
-
+					</div>
+					<div className="rowInfo">
+						<div className="rowColumnInfo">
+							<label className="label">Taille</label>
+							<p className="label_info">{this.state.height}</p>
+						</div>
+						<div className="rowColumnInfo">
+							<label className="label">Poids</label>
+							<p className="label_info">{this.state.weight}</p>
+						</div>
+					</div>
+					<div className="columnAbilities">
 					</div>
 				</div>
 			</div>
