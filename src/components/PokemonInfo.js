@@ -11,7 +11,9 @@ export default class PokemonInfo extends Component {
 		types: [
 		],
 		height: '',
-		weight: ''
+		weight: '',
+		abilities: [
+		]
 	}
 	async componentDidMount(){
 		/* Récupération de l'Id */
@@ -126,6 +128,47 @@ export default class PokemonInfo extends Component {
 			}
 		}
 
+		/* Récupération des Compétences */
+		let abilities = result.data.abilities
+		for(let i = 0; i < abilities.length; i++){
+			let abilitiesName = abilities[i].ability.name
+			let linkAbilities = `https://pokeapi.co/api/v2/ability/` + abilitiesName
+			let resultAbility = await axios.get(linkAbilities)
+
+			abilitiesName = resultAbility.data.name.charAt(0).toUpperCase() + resultAbility.data.name.substr(1);
+			for(let i = 0; i < abilitiesName.length; i++){
+			if(abilitiesName.charAt(i) === "-"){
+				abilitiesName = abilitiesName.substr(0, i) + " " + abilitiesName.charAt(i+1).toUpperCase() + abilitiesName.substr(i+2)
+				}
+			}
+			let j = 0
+			let abilityDesc = '';
+			let abilityDescLanguage = '';
+			do {
+				abilityDescLanguage = resultAbility.data["flavor_text_entries"][j]["language"]["name"]
+				abilityDesc = resultAbility.data["flavor_text_entries"][j]["flavor_text"]
+				j = j + 1;
+			} while (abilityDescLanguage !== "en");
+			let tabAbilities = [abilitiesName, abilityDesc]
+			this.state.abilities.push(tabAbilities)
+		}
+
+		/* Affichage des Compétences*/
+		for(let i = 0; i < this.state.abilities.length; i++){
+			let div = document.createElement("div");
+			div.className = "ability"
+			let titreAbility = document.createElement("h3");
+			titreAbility.textContent = this.state.abilities[i][0]
+			titreAbility.className = "ability_titre"
+			div.appendChild(titreAbility)
+			let descAbility = document.createElement("p");
+			descAbility.textContent = this.state.abilities[i][1]
+			descAbility.className = "ability_desc"
+			div.appendChild(descAbility)
+			let parentDiv = document.getElementById("columnAbilities")
+			parentDiv.appendChild(div)
+		}
+
 		/* Sprites et stats*/
 		this.setState({
 			image1 : result.data["sprites"]["other"]["official-artwork"]["front_default"],
@@ -188,27 +231,27 @@ export default class PokemonInfo extends Component {
 					</Slide>
 					<div className="stats">
 						<div className="statsDiv">
-							<label className="statsLabel">Point de Vie</label>
+							<label className="statsLabel">Hit Point</label>
 							<progress className="statsProgress" id="statsPV" value={this.state.statsPV} max="320"></progress>
 						</div>
 						<div className="statsDiv">
-							<label className="statsLabel">Attaque</label>
+							<label className="statsLabel">Attack</label>
 							<progress className="statsProgress" id="statsAttaque" value={this.state.statsAttaque} max="190"></progress>
 						</div>
 						<div className="statsDiv">
-							<label className="statsLabel">Défense</label>
+							<label className="statsLabel">Defense</label>
 							<progress className="statsProgress" id="statsDefense" value={this.state.statsDefense}  max="250"></progress>
 						</div>
 						<div className="statsDiv">
-							<label className="statsLabel">Attaque Spéciale</label>
+							<label className="statsLabel">Special Attack</label>
 							<progress className="statsProgress" id="statsAttaqueSpe" value={this.state.statsAttaqueSpe}  max="194"></progress>
 						</div>
 						<div className="statsDiv">
-							<label className="statsLabel">Défense Spéciale</label>
+							<label className="statsLabel">Special Defense</label>
 							<progress className="statsProgress" id="statsDefenseSpe" value={this.state.statsDefenseSpe}  max="250"></progress>
 						</div>
 						<div className="statsDiv">
-							<label className="statsLabel">Vitesse</label>
+							<label className="statsLabel">Speed</label>
 							<progress className="statsProgress" id="statsVitesse" value={this.state.statsVitesse}  max="200"></progress>
 						</div>
 					</div>
@@ -220,15 +263,16 @@ export default class PokemonInfo extends Component {
 					</div>
 					<div className="rowInfo">
 						<div className="rowColumnInfo">
-							<label className="label">Taille</label>
+							<label className="label">Height</label>
 							<p className="label_info">{this.state.height}</p>
 						</div>
 						<div className="rowColumnInfo">
-							<label className="label">Poids</label>
+							<label className="label">Weight</label>
 							<p className="label_info">{this.state.weight}</p>
 						</div>
 					</div>
-					<div className="columnAbilities">
+					<div id="columnAbilities">
+						<label className="label">Abilities</label>
 					</div>
 				</div>
 			</div>

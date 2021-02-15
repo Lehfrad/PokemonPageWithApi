@@ -3,6 +3,7 @@
 	margin: 5vw;
 	padding: 2vw;
 	background-color: gainsboro;
+	height: 83vw;
 }
 .rightPart{
 	width: 50vw;
@@ -69,8 +70,29 @@
 	font-weight: bolder;
 	color: black;
 }
-.columnAbilities{
+#columnAbilities{
 	display: flex;
 	flex-direction: column;
+	margin: 3vw 0;
+	height: auto;
+	width: auto;
+}
 
+.ability{
+	flex-direction: column;
+	width: 100%;
+	height: 7vw;
+	border: 1px solid #000 ;
+	background-color: whitesmoke;
+	padding: 0.5vw 1.5vw;
+	margin: 1vw;
+}
+.ability_titre{
+	font-size: 2vw;
+	font-weight: bold;	
+}
+.ability_desc{
+	width: auto;
+	font-size: 1.25vw;
+	font-weight: 300;
 }
