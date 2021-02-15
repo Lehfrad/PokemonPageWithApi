@@ -17,7 +17,6 @@ export default class PokemonAlea extends Component {
 
 		const requestDetail = await axios.get(this.state.pokemon.url);
 		this.setState({ detailPokemon: requestDetail.data} )
-		console.log(this.state.detailPokemon)
 		this.state.pokemonId = this.state.detailPokemon["id"] 
 
 		this.state.pokemon.name = this.state.pokemon.name.charAt(0).toUpperCase() + this.state.pokemon.name.substr(1);
