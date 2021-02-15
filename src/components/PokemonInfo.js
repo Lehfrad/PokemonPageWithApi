@@ -9,6 +9,10 @@ export default class PokemonInfo extends Component {
 	state = {
 		pokemonId: '',
 		types: [
+		],
+		height: '',
+		weight: '',
+		abilities: [
 		]
 	}
 	async componentDidMount(){
@@ -18,7 +22,6 @@ export default class PokemonInfo extends Component {
 		/* API */
 		const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
 		const result = await axios.get(pokemonUrl)
-		console.log(result.data.types)
 
 		/* Stylisation du Nom */
 		this.state.name = result.data.name.charAt(0).toUpperCase() + result.data.name.substr(1);
@@ -26,6 +29,27 @@ export default class PokemonInfo extends Component {
 			if(this.state.name.charAt(i) === "-"){
 				this.state.name = this.state.name.substr(0, i) + " " + this.state.name.charAt(i+1).toUpperCase() + this.state.name.substr(i+2)
 			}
+		}
+
+		/* Stylisation de la Taille */
+		let height = result.data.height.toString()
+		if(height.length === 1){
+			this.state.height = "0."+ height + " m"
+		}
+		else{
+			let lastChar = height.charAt(height.length - 1)
+			this.state.height = height.slice(0, -1) + "." + lastChar + " m"
+		}
+		console.log(result.data)
+
+		/* Stylisation du Poids */
+		let weight = result.data.weight.toString()
+		if(weight.length === 1){
+			this.state.weight = "0."+ weight + " kg"
+		}
+		else{
+			let lastChar = weight.charAt(weight.length - 1)
+			this.state.weight = weight.slice(0, -1) + "." + lastChar + " kg"
 		}
 
 		/* Stylisation des Types */
@@ -104,13 +128,61 @@ export default class PokemonInfo extends Component {
 			}
 		}
 
-		/* Sprites */
+		/* Récupération des Compétences */
+		let abilities = result.data.abilities
+		for(let i = 0; i < abilities.length; i++){
+			let abilitiesName = abilities[i].ability.name
+			let linkAbilities = `https://pokeapi.co/api/v2/ability/` + abilitiesName
+			let resultAbility = await axios.get(linkAbilities)
+
+			abilitiesName = resultAbility.data.name.charAt(0).toUpperCase() + resultAbility.data.name.substr(1);
+			for(let i = 0; i < abilitiesName.length; i++){
+			if(abilitiesName.charAt(i) === "-"){
+				abilitiesName = abilitiesName.substr(0, i) + " " + abilitiesName.charAt(i+1).toUpperCase() + abilitiesName.substr(i+2)
+				}
+			}
+			let j = 0
+			let abilityDesc = '';
+			let abilityDescLanguage = '';
+			do {
+				abilityDescLanguage = resultAbility.data["flavor_text_entries"][j]["language"]["name"]
+				abilityDesc = resultAbility.data["flavor_text_entries"][j]["flavor_text"]
+				j = j + 1;
+			} while (abilityDescLanguage !== "en");
+			let tabAbilities = [abilitiesName, abilityDesc]
+			this.state.abilities.push(tabAbilities)
+		}
+
+		/* Affichage des Compétences*/
+		for(let i = 0; i < this.state.abilities.length; i++){
+			let div = document.createElement("div");
+			div.className = "ability"
+			let titreAbility = document.createElement("h3");
+			titreAbility.textContent = this.state.abilities[i][0]
+			titreAbility.className = "ability_titre"
+			div.appendChild(titreAbility)
+			let descAbility = document.createElement("p");
+			descAbility.textContent = this.state.abilities[i][1]
+			descAbility.className = "ability_desc"
+			div.appendChild(descAbility)
+			let parentDiv = document.getElementById("columnAbilities")
+			parentDiv.appendChild(div)
+		}
+
+		/* Sprites et stats*/
 		this.setState({
 			image1 : result.data["sprites"]["other"]["official-artwork"]["front_default"],
 			image2 : result.data["sprites"]["front_default"],
 			image3 : result.data["sprites"]["back_default"],
 			image4 : result.data["sprites"]["front_shiny"],
 			image5 : result.data["sprites"]["back_shiny"],
+			statsPV : result.data["stats"][0]["base_stat"],
+			statsAttaque : result.data["stats"][1]["base_stat"],
+			statsDefense : result.data["stats"][2]["base_stat"],
+			statsAttaqueSpe : result.data["stats"][3]["base_stat"],
+			statsDefenseSpe : result.data["stats"][4]["base_stat"],
+			statsVitesse : result.data["stats"][5]["base_stat"]
+
 		})
 
 		/* Création div Types */
@@ -129,7 +201,7 @@ export default class PokemonInfo extends Component {
 	render() {
 		return (
 			<div className="pokedex">
-				<div className="slide-container" style={{width:"40vw", height:"40vw"}}>
+				<div className="slide-container" style={{width:"40vw", height:"auto"}}>
 					<Slide style={{duration: 3000,transitionDuration: 750}}>
 						<div className="each-slide">
 							<div>
@@ -157,12 +229,50 @@ export default class PokemonInfo extends Component {
 							</div>
 						</div>
 					</Slide>
+					<div className="stats">
+						<div className="statsDiv">
+							<label className="statsLabel">Hit Point</label>
+							<progress className="statsProgress" id="statsPV" value={this.state.statsPV} max="320"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Attack</label>
+							<progress className="statsProgress" id="statsAttaque" value={this.state.statsAttaque} max="190"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Defense</label>
+							<progress className="statsProgress" id="statsDefense" value={this.state.statsDefense}  max="250"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Special Attack</label>
+							<progress className="statsProgress" id="statsAttaqueSpe" value={this.state.statsAttaqueSpe}  max="194"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Special Defense</label>
+							<progress className="statsProgress" id="statsDefenseSpe" value={this.state.statsDefenseSpe}  max="250"></progress>
+						</div>
+						<div className="statsDiv">
+							<label className="statsLabel">Speed</label>
+							<progress className="statsProgress" id="statsVitesse" value={this.state.statsVitesse}  max="200"></progress>
+						</div>
+					</div>
       			</div>
 				<div className="rightPart">
 					<h1 className="pokemonName">{this.state.name}</h1>
 					<label className="label">Type</label>
 					<div className="types" id="type_list">
-
+					</div>
+					<div className="rowInfo">
+						<div className="rowColumnInfo">
+							<label className="label">Height</label>
+							<p className="label_info">{this.state.height}</p>
+						</div>
+						<div className="rowColumnInfo">
+							<label className="label">Weight</label>
+							<p className="label_info">{this.state.weight}</p>
+						</div>
+					</div>
+					<div id="columnAbilities">
+						<label className="label">Abilities</label>
 					</div>
 				</div>
 			</div>
