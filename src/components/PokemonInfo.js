@@ -40,7 +40,6 @@ export default class PokemonInfo extends Component {
 			let lastChar = height.charAt(height.length - 1)
 			this.state.height = height.slice(0, -1) + "." + lastChar + " m"
 		}
-		console.log(result.data)
 
 		/* Stylisation du Poids */
 		let weight = result.data.weight.toString()
@@ -55,75 +54,75 @@ export default class PokemonInfo extends Component {
 		/* Stylisation des Types */
 		for(let i = 0; i < result.data.types.length; i++){
 			if(result.data.types[i]["type"].name === "bug"){
-				let tab = ["Insecte", "#a8b820"]
+				let tab = ["Bug", "#a8b820", "../type/7"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "grass"){
-				let tab = ["Plante", "#78c850"]
+				let tab = ["Grass", "#78c850", "../type/12"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "psychic"){
-				let tab = ["Psy", "#f85888"]
+				let tab = ["Psychic", "#f85888", "../type/14"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "fairy"){
-				let tab = ["Fée", "#fdb9e9"]
+				let tab = ["Fairy", "#fdb9e9", "../type/18"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "normal"){
-				let tab = ["Normal", "#a8a878"]
+				let tab = ["Normal", "#a8a878", "../type/1"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "ground"){
-				let tab = ["Sol", "#e0c068"]
+				let tab = ["Ground", "#e0c068", "../type/5"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "electric"){
-				let tab = ["Électrik", "#f8d030"]
+				let tab = ["Electric", "#f8d030", "../type/13"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "flying"){
-				let tab = ["Vol", "#a890f0"]
+				let tab = ["Flying", "#a890f0", "../type/3"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "fighting"){
-				let tab = ["Combat", "#c03028"]
+				let tab = ["Fighting", "#c03028", "../type/2"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "steel"){
-				let tab = ["Acier", "#b8b8d0"]
+				let tab = ["Steel", "#b8b8d0", "../type/9"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "dark"){
-				let tab = ["Ténèbres", "#705848"]
+				let tab = ["Dark", "#705848", "../type/17"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "fire"){
-				let tab = ["Feu", "#f08030"]
+				let tab = ["Fire", "#f08030", "../type/10"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "rock"){
-				let tab = ["Roche", "#b8a038"]
+				let tab = ["Rock", "#b8a038", "../type/6"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "water"){
-				let tab = ["Eau", "#6890f0"]
+				let tab = ["Water", "#6890f0", "../type/11"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "ghost"){
-				let tab = ["Spectre", "#705898"]
+				let tab = ["Ghost", "#705898", "../type/8"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "dragon"){
-				let tab = ["Dragon", "#7038f8"]
+				let tab = ["Dragon", "#7038f8", "../type/16"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "poison"){
-				let tab = ["Poison", "#a040a0"]
+				let tab = ["Poison", "#a040a0", "../type/4"]
 				this.state.types.push(tab)
 			}
 			if(result.data.types[i]["type"].name === "ice"){
-				let tab = ["Glace", "#98d8d8"]
+				let tab = ["Ice", "#98d8d8", "../type/15"]
 				this.state.types.push(tab)
 			}
 		}
@@ -189,11 +188,15 @@ export default class PokemonInfo extends Component {
 		for(let i=0; i<this.state.types.length; i++){
 			let div = document.createElement("div");
 			div.className = "type_div"
+			div.id = this.state.types[i][0]
 			div.style.backgroundColor = this.state.types[i][1]
 			let typeContent = document.createTextNode(this.state.types[i][0]);
 			div.appendChild(typeContent)
+			let a = document.createElement('a');
+			a.appendChild(div)
+			a.href = this.state.types[i][2]
 			let parentDiv = document.getElementById('type_list')
-			parentDiv.appendChild(div)
+			parentDiv.appendChild(a)	
 		}
 	}
 	

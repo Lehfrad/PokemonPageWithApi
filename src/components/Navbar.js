@@ -1,16 +1,13 @@
-import React, { Component } from 'react'
+import React from 'react'
+import Search from './Search'
 
-export default class Navbar extends Component {
+export default class Navbar extends React.Component {
 	render() {
 		return (
 			<div>
 				<nav className="navbar navbar-expand-md navbar-light bg-light fixed-top justify-content-between">
 					<a className="navbar-brand" href="/">Pokemon</a>
-
-					<form className="form-inline my-2 my-lg-0">
-      				<input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-      				<button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    				</form>
+					<Search/>
 				</nav>
 			</div>
 		)

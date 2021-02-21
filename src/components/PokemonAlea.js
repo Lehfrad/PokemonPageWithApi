@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export default class PokemonAlea extends Component {
 	state = {
 		pokemon : [],
-  		alea: Math.floor(Math.random() * 1118) + 0 ,
+		alea: Math.floor(Math.random() * 1118) + 0 ,
 		url: 'https://pokeapi.co/api/v2/pokemon?limit=1&offset=',
 		detailPokemon : [],
 		pokemonId: '',
