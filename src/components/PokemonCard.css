@@ -1,0 +1,29 @@
+a:link { 
+	text-decoration:none; 
+}
+.card_div{
+	width: 15vw;
+	height: auto;
+	text-align: center;
+	margin: 1vw 0.5vw;
+	border: 1px solid #000;
+}
+.card_top{
+	width: 14vw;
+	height: 14vw;
+	text-align: center;
+}
+.card_image_top{
+	width: 14vw;
+	height: 14vw;
+}
+.card_bottom{
+	height: auto;
+	background-color: whitesmoke;
+}
+.card_bottom_text{
+	margin: 1vw 0 0 0;
+	font-size: 1.25vw;
+	text-decoration: none;
+	color: #000;
+}

@@ -1,0 +1,15 @@
+.menu_type_title{
+	margin-top: 6vw;
+	text-align: center;
+}
+.list_types{
+	width: 90vw;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	margin: 2vw auto;
+}
+.type_image{
+	height: 10vw;
+	width: 10vw;
+}
